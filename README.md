@@ -1,1 +1,1 @@
-# smart_ski_slope
+# smart ski slope
