@@ -1,0 +1,1 @@
+# smart_ski_slope
