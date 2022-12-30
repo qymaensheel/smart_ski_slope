@@ -1,7 +1,7 @@
 import pygame
 
 from config import Config
-from context_manager import ContextManager
+from elements.context_manager import ContextManager
 
 config = Config.get_instance()
 context_manager = ContextManager.get_instance()
@@ -14,11 +14,17 @@ def draw_grid(screen, w_width, w_height):
     red = (255, 0, 0)
     screen.fill(white)
 
+    # blit background
     screen.blit(config.IMAGES["SKI_SLOPE"], (0, 0))
+
+    # blit groomers
+    for groomer in context_manager.groomers:
+        groomer.blit(screen)
+
+    # blit skiers
     for route in context_manager.routes:
         for skier in route.skiers:
-            screen.blit(config.IMAGES["SKIER"], (skier.x, skier.y))
-
+            skier.blit(screen)
     # Display texts
     font = pygame.font.Font('freesansbold.ttf', 32)
 
@@ -47,8 +53,5 @@ def draw_grid(screen, w_width, w_height):
         textRect = text.get_rect()
         textRect.center = (route_x + 70, route_y - 100)
         screen.blit(text, textRect)
-
-    # tmp snow groomer blitz
-    screen.blit(config.IMAGES["SNOW_GROOMER"], (1500, 780))
 
     pygame.display.flip()

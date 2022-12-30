@@ -1,8 +1,8 @@
 import datetime
 
-from groomer import Groomer
 from config import Config
-from route import Route
+from elements.groomer import Groomer
+from elements.route import Route
 
 config = Config.get_instance()
 
@@ -14,8 +14,8 @@ class ContextManager:
         self.date = datetime.datetime(2022, 1, 1, 8, 0, 0)
         self.probability_new_skier = config.PROB_NEW_SKIER
 
-        self.routes = [Route(x) for x in config.START_POSITION]
-        self.groomers_available = [Groomer(x) for x in config.GROOMERS]
+        self.routes = [Route(x) for x in config.START_POSITIONS]
+        self.groomers = [Groomer(*position, config.GROOMERS_COST[i]) for i, position in enumerate(config.GROOMER_POSITIONS)]
 
     def get_routes_availability(self) -> list[bool]:
         return [x.available for x in self.routes]
@@ -25,6 +25,9 @@ class ContextManager:
 
     def get_skiers_count(self) -> list[int]:
         return [len(x.skiers) for x in self.routes]
+
+    def is_slope_open(self):
+        return config.OPENING_HOURS['open'] < self.date.time() < config.OPENING_HOURS['close']
 
     # def get_probability_table(self): -> list
     #     quality_lst = self.get_routes_quality()

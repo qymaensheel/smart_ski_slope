@@ -1,4 +1,5 @@
 import pygame
+
 from config import Config
 
 config = Config.get_instance()
