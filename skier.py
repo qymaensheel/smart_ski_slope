@@ -10,8 +10,8 @@ class Skier:
         self.y = y
         self.v = config.SKIER_V
 
-    def blit(self, screen: pygame.display):
+    def blit(self, screen: pygame.display) -> None:
         screen.blit(config.IMAGES["SKIER"], (self.x, self.y))
 
-    def move(self):
+    def move(self) -> None:
         self.y += self.v

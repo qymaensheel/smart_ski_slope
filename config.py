@@ -5,14 +5,17 @@ class Config:
     instance = None
 
     def __init__(self):
-        self.NUMBER_OF_ROUTES = 4
         self.SCREEN_WIDTH = 1600
         self.SCREEN_HEIGHT = 800
-        self.SKIER_V = 10
+
+        self.NUMBER_OF_ROUTES = 4
+        self.GROOMERS = [100, 200]
+        self.SKIER_V = 40
         self.SKIER_MAX_Y = 700
-        self.PROB_NEW_SKIER = 0.2
+        self.PROB_NEW_SKIER = 0.9
         self.AUTORUN = True
-        self.AUTORUN_TIME_DELAY = 100  # ms
+        self.AUTORUN_TIME_DELAY = 50  # ms
+        self.QUALITY_STEP = 1
         self.START_POSITION = [(190, 136), (560, 136), (880, 136), (1265, 136)]
         self.IMAGES = {
             "SKIER": pygame.transform.scale(pygame.image.load('imgs/skier.png'), (30, 30)),

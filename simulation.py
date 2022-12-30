@@ -1,20 +1,21 @@
+import datetime
 import random
 
+import numpy as np
 import pygame
-from config import Config
-from visual_simulation import draw_grid
-from skier import Skier
 from pygame.locals import (
-    K_RIGHT,
     KEYDOWN,
     QUIT,
-    K_ESCAPE
 )
+
+from config import Config
+from context_manager import ContextManager
+from skier import Skier
+from visual_simulation import draw_grid
 
 config = Config.get_instance()
 
 if __name__ == '__main__':
-    print("hello")
     pygame.init()
 
     w_width = config.SCREEN_WIDTH
@@ -33,23 +34,34 @@ if __name__ == '__main__':
     skiers = []
     step = -1
 
+    context_manager = ContextManager.get_instance()
+    total_number_of_skiers = 0
     while running:
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
             elif event.type == KEYDOWN or event.type == timer_event and config.AUTORUN:
                 step += 1
-                if random.random() <= config.PROB_NEW_SKIER:
-                    skier_x, skier_y = config.START_POSITION[random.randint(0, config.NUMBER_OF_ROUTES-1)]
-                    skier_x += random.randrange(-20, 20)
-                    skiers.append(Skier(skier_x, skier_y))
 
-                skiers_skiing = []
-                for skier in skiers:
-                    skier.move()
-                    if skier.y < config.SKIER_MAX_Y:
-                        skiers_skiing.append(skier)
-                skiers = skiers_skiing.copy()
-                draw_grid(screen, w_width, w_height, step, skiers)
+                if random.random() <= context_manager.probability_new_skier:
+                    probabilities_new_skier = context_manager.get_probability_table()
+                    if sum(probabilities_new_skier) == 1:
+                        total_number_of_skiers += 1
+                        skier_choice = np.random.choice(list(range(config.NUMBER_OF_ROUTES)), size=1,
+                                                        p=probabilities_new_skier)
+                        skier_choice = int(skier_choice)
+                        skier_route_choice = context_manager.routes[skier_choice]
+                        skier_x, skier_y = skier_route_choice.start_position
+                        skier_x += random.randrange(-20, 20)
+                        skier_y += random.randrange(-10, 10)
+                        new_skier = Skier(skier_x, skier_y)
+                        skier_route_choice.skiers.append(new_skier)
+                context_manager.print_status()
+                for route in context_manager.routes:
+                    route.move_skiers()
+
+                draw_grid(screen, w_width, w_height)
+                context_manager.update_probability()
+                context_manager.date += datetime.timedelta(minutes=5)
 
     pygame.quit()
