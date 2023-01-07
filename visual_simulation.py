@@ -34,6 +34,12 @@ def draw_grid(screen, w_width, w_height):
     textRect.center = (w_width // 2, w_height + 40)
     screen.blit(text, textRect)
 
+    # wallet
+    text = font.render(f'{context_manager.wallet} PLN', True, black, white)
+    textRect = text.get_rect()
+    textRect.center = (w_width // 2, w_height + 40)
+    screen.blit(text, textRect)
+
     # routes data
     for route in context_manager.routes:
         if route.quality == 0:

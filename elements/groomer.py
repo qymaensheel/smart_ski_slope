@@ -16,7 +16,6 @@ class Groomer:
         self.route_grooming = None
 
     def blit(self, screen: pygame.display) -> None:
-        print("BLIT THIS FUCKING GROOMER")
         screen.blit(config.IMAGES["SNOW_GROOMER"], (self.x, self.y))
 
     def move(self) -> None:

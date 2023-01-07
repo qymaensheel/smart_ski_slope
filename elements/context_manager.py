@@ -17,6 +17,8 @@ class ContextManager:
         self.routes = [Route(x) for x in config.START_POSITIONS]
         self.groomers = [Groomer(*position, config.GROOMERS_COST[i]) for i, position in enumerate(config.GROOMER_POSITIONS)]
 
+        self.wallet = 1000  # PLN
+
     def get_routes_availability(self) -> list[bool]:
         return [x.available for x in self.routes]
 
