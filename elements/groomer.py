@@ -6,13 +6,13 @@ config = Config.get_instance()
 
 
 class Groomer:
-    def __init__(self, x: int, y: int, cost_per_hour=100):
+    def __init__(self, x: int, y: int, cost=200):
         self.available = True
         self.starting_position = (x, y)
         self.x = x
         self.y = y
         self.v = config.GROOMER_V
-        self.cost_per_hour = cost_per_hour
+        self.cost = cost
         self.route_grooming = None
 
     def blit(self, screen: pygame.display) -> None:

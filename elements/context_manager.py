@@ -11,13 +11,18 @@ class ContextManager:
     instance = None
 
     def __init__(self):
-        self.date = datetime.datetime(2022, 1, 1, 8, 0, 0)
+        self.date = datetime.datetime(2023, 1, 1, 8, 0, 0)
         self.probability_new_skier = config.PROB_NEW_SKIER
 
         self.routes = [Route(x) for x in config.START_POSITIONS]
-        self.groomers = [Groomer(*position, config.GROOMERS_COST[i]) for i, position in enumerate(config.GROOMER_POSITIONS)]
+        self.groomers = [Groomer(*position, config.GROOMERS_COST[i]) for i, position in
+                         enumerate(config.GROOMER_POSITIONS)]
 
-        self.wallet = 1000  # PLN
+        self.wallet = config.STARTING_BUDGET
+        self.daily_skiers = 0
+        self.budget_plot_values = []
+        self.road_qualities_plot_values = [[] for _ in self.routes]
+        self.daily_skiers_plot_values = []
 
     def get_routes_availability(self) -> list[bool]:
         return [x.available for x in self.routes]
@@ -30,13 +35,6 @@ class ContextManager:
 
     def is_slope_open(self):
         return config.OPENING_HOURS['open'] < self.date.time() < config.OPENING_HOURS['close']
-
-    # def get_probability_table(self): -> list
-    #     quality_lst = self.get_routes_quality()
-    #     probability_of_quitting = 100 * config.NUMBER_OF_ROUTES - sum(quality_lst)
-    #     quality_lst.append(probability_of_quitting)
-    #     quality_lst = [x / (100 * config.NUMBER_OF_ROUTES) for x in quality_lst]
-    #     return quality_lst
 
     def get_probability_table(self) -> list[float]:
         quality_list = []
@@ -54,7 +52,38 @@ class ContextManager:
         fraction = sum(qualities) / (config.NUMBER_OF_ROUTES * 100)
         self.probability_new_skier = fraction * config.PROB_NEW_SKIER
 
+    def pay_for_route(self) -> None:
+        if self.date.minute == 0 and self.date.second == 0:
+            for route in self.routes:
+                if route.available:
+                    self.wallet -= config.ROUTE_COST_PER_HOUR
+
+    def close_routes_for_night(self) -> None:
+        for route in self.routes:
+            route.available = False
+
+    def open_routes_for_day(self) -> None:
+        for route in self.routes:
+            route.available = True
+        for groomer in self.groomers:
+            if groomer.route_grooming is not None:
+                groomer.route_grooming.available = False
+
+    def add_hourly(self) -> None:
+        if self.date.minute == 0:
+            self.budget_plot_values.append(self.wallet)
+            qualities = self.get_routes_quality()
+            for idx, quality in enumerate(qualities):
+                self.road_qualities_plot_values[idx].append(quality)
+
+    def add_daily(self) -> None:
+        if self.date.hour == 0 and self.date.minute == 0:
+            self.daily_skiers_plot_values.append(self.daily_skiers)
+            self.daily_skiers = 0
+
     def print_status(self) -> None:
+        print('Date')
+        print(self.date.time())
         print('\nRoutes availability:')
         print(self.get_routes_availability())
         print('Routes quality:')

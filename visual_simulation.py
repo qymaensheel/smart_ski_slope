@@ -37,8 +37,14 @@ def draw_grid(screen, w_width, w_height):
     # wallet
     text = font.render(f'{context_manager.wallet} PLN', True, black, white)
     textRect = text.get_rect()
-    textRect.center = (w_width // 2, w_height + 40)
+    textRect.center = (100, w_height + 40)
     screen.blit(text, textRect)
+
+    # # temperature
+    # text = font.render(f'{context_manager.temperature} PLN', True, black, white)
+    # textRect = text.get_rect()
+    # textRect.center = (100, w_height + 40)
+    # screen.blit(text, textRect)
 
     # routes data
     for route in context_manager.routes:

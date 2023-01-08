@@ -11,6 +11,7 @@ from pygame.locals import (
 from config import Config
 from elements.context_manager import ContextManager
 from elements.skier import Skier
+from plots import plot_data
 from visual_simulation import draw_grid
 
 config = Config.get_instance()
@@ -43,8 +44,17 @@ if __name__ == '__main__':
             elif event.type == KEYDOWN or event.type == timer_event and config.AUTORUN:
                 step += 1
 
+                # open and close routes
+                if context_manager.date.time() == config.OPENING_HOURS['open']:
+                    context_manager.open_routes_for_day()
+                if context_manager.date.time() == config.OPENING_HOURS['close']:
+                    context_manager.close_routes_for_night()
+
                 # start grooming
-                if context_manager.date.time() == (datetime.datetime.combine(datetime.date(1, 1, 1), config.OPENING_HOURS['open']) - datetime.timedelta(hours=2)).time():
+                if context_manager.date.time() == (datetime.datetime.combine(datetime.date(1, 1, 1),
+                                                                             config.OPENING_HOURS[
+                                                                                 'open']) - datetime.timedelta(
+                    hours=2)).time():
                     chosen_groomer = None
                     for groomer in context_manager.groomers:
                         if groomer.available:
@@ -57,6 +67,8 @@ if __name__ == '__main__':
                         chosen_groomer.available = False
                         chosen_groomer.route_grooming = selected_route
                         chosen_groomer.x, chosen_groomer.y = selected_route.start_position
+                        context_manager.wallet -= groomer.cost
+
                 for groomer in context_manager.groomers:
                     if not groomer.available:
                         groomer.move()
@@ -67,6 +79,7 @@ if __name__ == '__main__':
                         probabilities_new_skier = context_manager.get_probability_table()
                         if sum(probabilities_new_skier) == 1:
                             total_number_of_skiers += 1
+                            context_manager.daily_skiers += 1
                             skier_choice = np.random.choice(list(range(config.NUMBER_OF_ROUTES)), size=1,
                                                             p=probabilities_new_skier)
                             skier_choice = int(skier_choice)
@@ -76,12 +89,20 @@ if __name__ == '__main__':
                             skier_y += random.randrange(-10, 10)
                             new_skier = Skier(skier_x, skier_y)
                             skier_route_choice.skiers.append(new_skier)
-                context_manager.print_status()
+                            context_manager.wallet += config.TICKET
+
+                context_manager.add_hourly()
+                context_manager.add_daily()
+                context_manager.pay_for_route()
                 for route in context_manager.routes:
                     route.move_skiers()
 
+                context_manager.print_status()
                 draw_grid(screen, w_width, w_height)
                 context_manager.update_probability()
                 context_manager.date += datetime.timedelta(minutes=5)
+                plot_data()
 
+                if context_manager.date >= config.SIMULATION_END_DATE:
+                    quit(0)
     pygame.quit()
