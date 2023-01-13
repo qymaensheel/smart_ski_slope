@@ -3,6 +3,7 @@ import datetime
 from config import Config
 from elements.groomer import Groomer
 from elements.route import Route
+from elements.weather import Weather
 
 config = Config.get_instance()
 
@@ -13,7 +14,7 @@ class ContextManager:
     def __init__(self):
         self.date = datetime.datetime(2023, 1, 1, 8, 0, 0)
         self.probability_new_skier = config.PROB_NEW_SKIER
-
+        self.weather = Weather()
         self.routes = [Route(x) for x in config.START_POSITIONS]
         self.groomers = [Groomer(*position, config.GROOMERS_COST[i]) for i, position in
                          enumerate(config.GROOMER_POSITIONS)]
@@ -21,7 +22,7 @@ class ContextManager:
         self.wallet = config.STARTING_BUDGET
         self.daily_skiers = 0
         self.budget_plot_values = []
-        self.road_qualities_plot_values = [[] for _ in self.routes]
+        self.route_qualities_plot_values = [[] for _ in self.routes]
         self.daily_skiers_plot_values = []
 
     def get_routes_availability(self) -> list[bool]:
@@ -74,17 +75,24 @@ class ContextManager:
             self.budget_plot_values.append(self.wallet)
             qualities = self.get_routes_quality()
             for idx, quality in enumerate(qualities):
-                self.road_qualities_plot_values[idx].append(quality)
+                self.route_qualities_plot_values[idx].append(quality)
 
     def add_daily(self) -> None:
         if self.date.hour == 0 and self.date.minute == 0:
             self.daily_skiers_plot_values.append(self.daily_skiers)
             self.daily_skiers = 0
 
+    def adjust_route_qualities(self):
+        for route in self.routes:
+            if 0 <= route.quality + self.weather.hourly_change_rate <= 100:
+                route.quality += self.weather.hourly_change_rate
+
     def print_status(self) -> None:
-        print('Date')
+        print('\nDate')
         print(self.date.time())
-        print('\nRoutes availability:')
+        print('Temperature')
+        print(self.weather.current_temp)
+        print('Routes availability:')
         print(self.get_routes_availability())
         print('Routes quality:')
         print(self.get_routes_quality())

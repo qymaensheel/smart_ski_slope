@@ -15,9 +15,9 @@ def plot_data():
         current_dir = (config.PLOT_PATH / f'{datetime.now().strftime("%d_%m_%Y__%H_%M")}')
         os.mkdir(current_dir)
 
-        # road quality plot
+        # route quality plot
         fig, ax = plt.subplots(figsize=[10, 5])
-        for idx, route_quality in enumerate(context_manager.road_qualities_plot_values):
+        for idx, route_quality in enumerate(context_manager.route_qualities_plot_values):
             ax.plot(route_quality, label=f'Route {idx + 1}')
         ax.legend()
         ax.set_xlabel('Hour')
@@ -26,7 +26,7 @@ def plot_data():
         fig.tight_layout()
         title.set_y(1.05)
         plt.show()
-        fig.savefig((current_dir / 'road_quality'))
+        fig.savefig((current_dir / 'route_quality'))
 
         # budget plot
         plt.figure()

@@ -30,21 +30,21 @@ def draw_grid(screen, w_width, w_height):
 
     # time
     text = font.render(f'{context_manager.date.strftime("%d/%m/%Y %H:%M")}', True, black, white)
-    textRect = text.get_rect()
-    textRect.center = (w_width // 2, w_height + 40)
-    screen.blit(text, textRect)
+    text_rect = text.get_rect()
+    text_rect.center = (w_width // 2, w_height + 40)
+    screen.blit(text, text_rect)
 
     # wallet
     text = font.render(f'{context_manager.wallet} PLN', True, black, white)
-    textRect = text.get_rect()
-    textRect.center = (100, w_height + 40)
-    screen.blit(text, textRect)
+    text_rect = text.get_rect()
+    text_rect.center = (100, w_height + 40)
+    screen.blit(text, text_rect)
 
-    # # temperature
-    # text = font.render(f'{context_manager.temperature} PLN', True, black, white)
-    # textRect = text.get_rect()
-    # textRect.center = (100, w_height + 40)
-    # screen.blit(text, textRect)
+    # temperature
+    text = font.render(f'{context_manager.weather.current_temp} °C', True, black, white)
+    text_rect = text.get_rect()
+    text_rect.center = (w_width - 100, 40)
+    screen.blit(text, text_rect)
 
     # routes data
     for route in context_manager.routes:
@@ -53,17 +53,17 @@ def draw_grid(screen, w_width, w_height):
         route_x, route_y = route.start_position
         # quality
         text = font.render(f'{int(route.quality)}%', True, black, white)
-        textRect = text.get_rect()
-        textRect.center = (route_x, route_y - 100)
-        screen.blit(text, textRect)
+        text_rect = text.get_rect()
+        text_rect.center = (route_x, route_y - 100)
+        screen.blit(text, text_rect)
 
         # availability
         if route.available:
             text = font.render('O', True, green, white)
         else:
             text = font.render('X', True, red, white)
-        textRect = text.get_rect()
-        textRect.center = (route_x + 70, route_y - 100)
-        screen.blit(text, textRect)
+        text_rect = text.get_rect()
+        text_rect.center = (route_x + 70, route_y - 100)
+        screen.blit(text, text_rect)
 
     pygame.display.flip()

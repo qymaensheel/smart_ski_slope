@@ -15,6 +15,7 @@ from plots import plot_data
 from visual_simulation import draw_grid
 
 config = Config.get_instance()
+# context_app = ContextApp()
 
 if __name__ == '__main__':
     pygame.init()
@@ -42,6 +43,7 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 running = False
             elif event.type == KEYDOWN or event.type == timer_event and config.AUTORUN:
+                # context_app.notify()
                 step += 1
 
                 # open and close routes
@@ -67,7 +69,7 @@ if __name__ == '__main__':
                         chosen_groomer.available = False
                         chosen_groomer.route_grooming = selected_route
                         chosen_groomer.x, chosen_groomer.y = selected_route.start_position
-                        context_manager.wallet -= groomer.cost
+                        context_manager.wallet -= chosen_groomer.cost
 
                 for groomer in context_manager.groomers:
                     if not groomer.available:
@@ -97,10 +99,16 @@ if __name__ == '__main__':
                 for route in context_manager.routes:
                     route.move_skiers()
 
+                if context_manager.date.minute == 0:
+                    context_manager.weather.update_current_temp()
+                    context_manager.weather.calc_change_rate()
+                    context_manager.adjust_route_qualities()
+
                 context_manager.print_status()
                 draw_grid(screen, w_width, w_height)
                 context_manager.update_probability()
                 context_manager.date += datetime.timedelta(minutes=5)
+
                 plot_data()
 
                 if context_manager.date >= config.SIMULATION_END_DATE:

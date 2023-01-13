@@ -14,8 +14,8 @@ class Config:
         self.NUMBER_OF_ROUTES = 4
         self.GROOMER_POSITIONS = [(1500, 800), (1400, 800)]
         self.GROOMERS_COST = [750, 750]
-        self.ROUTE_COST_PER_HOUR = 100
-        self.TICKET = 70
+        self.ROUTE_COST_PER_HOUR = 80
+        self.TICKET = 60
         self.GROOMER_V = 10
         self.SKIER_V = 40
         self.SKIER_MAX_Y = 700
@@ -25,9 +25,11 @@ class Config:
         self.QUALITY_STEP = 1
         self.START_POSITIONS = [(190, 136), (560, 136), (880, 136), (1265, 136)]
         self.OPENING_HOURS = {'open': datetime.time(8), 'close': datetime.time(20)}
+        self.WEATHER_CHANGE_RATE = 0.25
+        self.WEATHER_OFFSET = 18 * 24 + 8
         self.PLOT = True
         self.PLOT_PATH = Path("outputs")
-        self.SIMULATION_END_DATE = datetime.datetime(2023, 1, 7, 23, 0, 0)
+        self.SIMULATION_END_DATE = datetime.datetime(2023, 2, 1, 23, 0, 0)
         self.IMAGES = {
             "SKIER": pygame.transform.scale(pygame.image.load('imgs/skier.png'), (30, 30)),
             "SNOW_GROOMER": pygame.transform.scale(pygame.image.load('imgs/snow_groomer.png'), (100, 80)),

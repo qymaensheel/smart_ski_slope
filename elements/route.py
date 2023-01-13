@@ -16,7 +16,7 @@ class Route:
             skier.move()
             if skier.y < config.SKIER_MAX_Y:
                 skiers_skiing.append(skier)
-            elif self.quality > 0:
+            elif self.quality > config.QUALITY_STEP:
                 self.quality -= config.QUALITY_STEP
         self.skiers = skiers_skiing.copy()
 
