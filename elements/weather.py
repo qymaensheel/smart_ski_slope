@@ -29,6 +29,6 @@ class Weather:
         elif -5 < self.current_temp < 0:
             self.hourly_change_rate = config.WEATHER_CHANGE_RATE
         elif -10 < self.current_temp < -5:
-            self.hourly_change_rate = 1.5 * config.WEATHER_CHANGE_RATE
+            self.hourly_change_rate = 1 * config.WEATHER_CHANGE_RATE
         elif self.current_temp < -10:
-            self.hourly_change_rate = 3 * config.WEATHER_CHANGE_RATE
+            self.hourly_change_rate = 2 * config.WEATHER_CHANGE_RATE

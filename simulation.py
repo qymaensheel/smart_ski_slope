@@ -9,13 +9,14 @@ from pygame.locals import (
 )
 
 from config import Config
+from elements.context_app.context_app import ContextApp
 from elements.context_manager import ContextManager
 from elements.skier import Skier
 from plots import plot_data
 from visual_simulation import draw_grid
 
 config = Config.get_instance()
-# context_app = ContextApp()
+context_app = ContextApp()
 
 if __name__ == '__main__':
     pygame.init()
@@ -43,7 +44,7 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 running = False
             elif event.type == KEYDOWN or event.type == timer_event and config.AUTORUN:
-                # context_app.notify()
+                context_app.notify()
                 step += 1
 
                 # open and close routes
@@ -76,7 +77,7 @@ if __name__ == '__main__':
                         groomer.move()
 
                 # create skiers
-                if context_manager.is_slope_open():
+                if context_manager.is_slope_open() and context_app.slope_open:
                     if random.random() <= context_manager.probability_new_skier:
                         probabilities_new_skier = context_manager.get_probability_table()
                         if sum(probabilities_new_skier) == 1:
