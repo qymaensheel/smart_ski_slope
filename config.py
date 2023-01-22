@@ -38,7 +38,6 @@ class Config:
                                                 (self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         }
 
-
     def __str__(self):
         return_str = ""
         for k, v in self.__dict__.items():

@@ -1,5 +1,3 @@
-import datetime
-
 import pygame
 
 from config import Config
@@ -21,7 +19,6 @@ class Groomer:
         screen.blit(config.IMAGES["SNOW_GROOMER"], (self.x, self.y))
 
     def move(self, daytime=True) -> None:
-        # if self.route_grooming is not None:
         self.y += self.v
         if self.y > config.SKIER_MAX_Y:
             self.available = True

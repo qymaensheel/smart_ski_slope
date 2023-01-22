@@ -71,7 +71,8 @@ if __name__ == '__main__':
                     context_manager.close_routes_for_night()
 
                 # start grooming
-                # groom_lowest_route()
+                if not context_app.enable:
+                    groom_lowest_route()
 
                 for groomer in context_manager.groomers:
                     if not groomer.available:

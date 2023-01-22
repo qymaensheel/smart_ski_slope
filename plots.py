@@ -1,4 +1,5 @@
 import os
+import pickle
 from datetime import datetime
 
 import matplotlib.pyplot as plt
@@ -55,3 +56,12 @@ def plot_data():
 
         with open((current_dir / 'config.txt'), 'w') as f:
             f.write(str(config))
+
+        data_to_pickle = {'budget_plot_values': context_manager.budget_plot_values,
+                          'route_qualities_plot_values': context_manager.route_qualities_plot_values,
+                          'daily_skiers_plot_values': context_manager.daily_skiers_plot_values
+                          }
+
+        with open((current_dir / 'dump_slope_data.pickle'), 'wb') as f:
+            pickle.dump(data_to_pickle, f)
+
