@@ -18,6 +18,23 @@ from visual_simulation import draw_grid
 config = Config.get_instance()
 context_app = ContextApp()
 
+
+def groom_lowest_route():
+    if context_manager.date.time() == datetime.time(hour=6) or \
+            context_manager.date.time() == datetime.time(hour=20):
+
+        index_min = np.argmin(context_manager.get_routes_quality())
+        selected_route = context_manager.routes[index_min]
+        chosen_groomer = None
+        for g in context_manager.groomers:
+            if g.available:
+                chosen_groomer = g
+                break
+        if chosen_groomer is not None:
+            chosen_groomer.groom(selected_route)
+            context_manager.wallet -= chosen_groomer.cost
+
+
 if __name__ == '__main__':
     pygame.init()
 
@@ -54,27 +71,11 @@ if __name__ == '__main__':
                     context_manager.close_routes_for_night()
 
                 # start grooming
-                if context_manager.date.time() == (datetime.datetime.combine(datetime.date(1, 1, 1),
-                                                                             config.OPENING_HOURS[
-                                                                                 'open']) - datetime.timedelta(
-                    hours=2)).time():
-                    chosen_groomer = None
-                    for groomer in context_manager.groomers:
-                        if groomer.available:
-                            chosen_groomer = groomer
-                            break
-                    if chosen_groomer is not None:
-                        index_min = np.argmin(context_manager.get_routes_quality())
-                        selected_route = context_manager.routes[index_min]
-                        selected_route.available = False
-                        chosen_groomer.available = False
-                        chosen_groomer.route_grooming = selected_route
-                        chosen_groomer.x, chosen_groomer.y = selected_route.start_position
-                        context_manager.wallet -= chosen_groomer.cost
+                # groom_lowest_route()
 
                 for groomer in context_manager.groomers:
                     if not groomer.available:
-                        groomer.move()
+                        groomer.move(context_manager.is_slope_open())
 
                 # create skiers
                 if context_manager.is_slope_open() and context_app.slope_open:

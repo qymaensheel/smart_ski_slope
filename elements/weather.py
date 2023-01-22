@@ -10,7 +10,6 @@ class Weather:
         self.input_csv = pd.read_csv(input_csv)
         self.temperature = self.input_csv['Temperature'].values.tolist()
         self.temperature = self.temperature[config.WEATHER_OFFSET:800 + config.WEATHER_OFFSET]
-
         self.temperature_idx = -1
         self.current_temp = -1
         self.hourly_change_rate = 0

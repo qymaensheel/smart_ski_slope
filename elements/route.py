@@ -9,6 +9,7 @@ class Route:
         self.available = True
         self.quality = 100
         self.skiers = []
+        self.is_groomed = False
 
     def move_skiers(self) -> None:
         skiers_skiing = []

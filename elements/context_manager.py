@@ -20,6 +20,8 @@ class ContextManager:
                          enumerate(config.GROOMER_POSITIONS)]
 
         self.wallet = config.STARTING_BUDGET
+
+        # statistics
         self.daily_skiers = 0
         self.budget_plot_values = []
         self.route_qualities_plot_values = [[] for _ in self.routes]
@@ -34,7 +36,7 @@ class ContextManager:
     def get_skiers_count(self) -> list[int]:
         return [len(x.skiers) for x in self.routes]
 
-    def is_slope_open(self):
+    def is_slope_open(self) -> bool:
         return config.OPENING_HOURS['open'] < self.date.time() < config.OPENING_HOURS['close']
 
     def get_probability_table(self) -> list[float]:
@@ -82,7 +84,7 @@ class ContextManager:
             self.daily_skiers_plot_values.append(self.daily_skiers)
             self.daily_skiers = 0
 
-    def adjust_route_qualities(self):
+    def adjust_route_qualities(self) -> None:
         for route in self.routes:
             if 0 <= route.quality + self.weather.hourly_change_rate <= 100:
                 route.quality += self.weather.hourly_change_rate

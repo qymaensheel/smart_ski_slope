@@ -43,8 +43,8 @@ def plot_data():
         # skiers plot
         plt.figure()
         fig, ax = plt.subplots(figsize=[10, 5])
-        ax.scatter(list(range(1, len(context_manager.daily_skiers_plot_values) + 1)),
-                   context_manager.daily_skiers_plot_values)
+        ax.bar(list(range(1, len(context_manager.daily_skiers_plot_values) + 1)),
+               context_manager.daily_skiers_plot_values)
         ax.set_xlabel('Day')
         ax.set_ylabel('Skiers')
         title = ax.set_title('Skiers over time')
